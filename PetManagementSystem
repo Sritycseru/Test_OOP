@@ -1,0 +1,163 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+// Abstract class for all pets
+abstract class Pet {
+    private String name;
+    private double price;
+    private boolean sold;
+
+    public Pet(String name, double price) {
+        this.name = name;
+        this.price = price;
+        this.sold = false;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public boolean isSold() {
+        return sold;
+    }
+
+    public void sell() {
+        sold = true;
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + ", Price: $" + price + ", Sold: " + (sold ? "Yes" : "No");
+    }
+
+    // Abstract method to get the type of pet
+    public abstract String getType();
+}
+
+// Concrete subclasses for specific pet types
+class Cat extends Pet {
+    public Cat(String name, double price) {
+        super(name, price);
+    }
+
+    @Override
+    public String getType() {
+        return "Cat";
+    }
+}
+
+class Dog extends Pet {
+    public Dog(String name, double price) {
+        super(name, price);
+    }
+
+    @Override
+    public String getType() {
+        return "Dog";
+    }
+}
+
+class Parrot extends Pet {
+    public Parrot(String name, double price) {
+        super(name, price);
+    }
+
+    @Override
+    public String getType() {
+        return "Parrot";
+    }
+}
+
+// Interface for managing pets in a store
+interface PetStore {
+    void addPet(Pet pet);
+
+    void listPets();
+
+    void sellPet(String name);
+}
+
+// Concrete implementation of the pet store
+class PetStoreImpl implements PetStore {
+    private ArrayList<Pet> pets;
+
+    public PetStoreImpl() {
+        pets = new ArrayList<>();
+    }
+
+    @Override
+    public void addPet(Pet pet) {
+        pets.add(pet);
+        System.out.println("Added " + pet.getType() + " named " + pet.getName() + " to the store.");
+    }
+
+    @Override
+    public void listPets() {
+        int size = pets.size();
+        for (Pet pet : pets) {
+            System.out.println(pet);
+        }
+    }
+
+    @Override
+    public void sellPet(String name) {
+        for (Pet pet : pets) {
+            if (!pet.isSold() && pet.getName().equalsIgnoreCase(name)) {
+                pet.sell();
+                System.out.println("Sold " + pet.getType() + " named " + pet.getName() + " for $" + pet.getPrice());
+                return;
+            }
+        }
+        System.out.println("Pet not found or already sold.");
+    }
+}
+
+public class PetManagementSystem {
+    public static void main(String[] args) {
+        PetStore petStore = new PetStoreImpl();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the cat name: ");
+        String catname = scanner.nextLine();
+
+        System.out.print("Price: ");
+        int cat_price = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Enter the dog name: ");
+        String dogname = scanner.nextLine();
+
+        System.out.print("Price: ");
+        int dog_price = scanner.nextInt();
+        scanner.nextLine();
+
+
+        System.out.print("Enter the parrot name: ");
+        String parrotname = scanner.nextLine();
+        System.out.print("Price: ");
+        int parrot_price = scanner.nextInt();
+        scanner.nextLine();
+
+
+        // Add some pets to the store
+        petStore.addPet(new Cat(catname, cat_price));
+
+        petStore.addPet(new Dog(dogname,dog_price));
+
+        petStore.addPet(new Parrot(parrotname,parrot_price));
+
+        // List available pets
+        petStore.listPets();
+
+        // Sell a pet
+        System.out.println("Enter the pet number to sell: ");
+        String sellname = scanner.nextLine();
+
+        petStore.sellPet(sellname);
+        System.out.println("Pet lists after selling a pet");
+        petStore.listPets();
+    }
+}
